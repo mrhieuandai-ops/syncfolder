@@ -8,7 +8,7 @@
 //! - Story 2-5: Deletion policy
 
 use crate::errors::{AppError, SyncError};
-use super::super::events::sync_events;
+use crate::events::sync_events;
 use crate::models::{SyncJob, SyncProfile, JobStatus, JobSource, SyncEvent, SyncEventType};
 use crate::repositories::{ProfilesRepository, JobsRepository, EventsRepository};
 use crate::services::path_guard::PathGuard;

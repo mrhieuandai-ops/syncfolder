@@ -12,8 +12,8 @@ mod models;
 mod errors;
 mod repositories;
 mod services;
-
-mod state;
+pub mod state;
+pub mod events;
 
 use services::persistence::Database;
 use repositories::{ProfilesRepository, JobsRepository};
