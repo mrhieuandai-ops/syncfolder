@@ -1,5 +1,5 @@
 //! Sync command implementation
-//!
+//! 
 //! Implements:
 //! - Story 2-1: Manual sync trigger
 //! - Story 2-2: Scheduled sync with anti-overlap
@@ -8,6 +8,7 @@
 //! - Story 2-5: Deletion policy
 
 use crate::errors::{AppError, SyncError};
+use crate::events::sync_events;
 use crate::models::{SyncJob, SyncProfile, JobStatus, JobSource, SyncEvent, SyncEventType};
 use crate::repositories::{ProfilesRepository, JobsRepository, EventsRepository};
 use crate::services::path_guard::PathGuard;
@@ -76,7 +77,7 @@ pub async fn run_sync_now(
         .map_err(|e| AppError::validation_error(&format!("Lỗi tạo job: {}", e)))?;
 
     // Step 3: Emit queued event (Story 2-1 AC1)
-    crate::events::sync_events::emit_sync_queued(&app, &profile_id, &job_id);
+    sync_events::emit_sync_queued(&app, &profile_id, &job_id);
 
     // Step 4: Check if job already running for this profile (anti-overlap - Story 2-2)
     // Use jobs_repo.get_running_for_profile() consistent with scheduler
@@ -100,7 +101,7 @@ pub async fn run_sync_now(
     let _ = state.jobs_repo.update(&running_job);
 
     // Step 5b: Emit started event (Job is now actually running)
-    crate::events::sync_events::emit_sync_started(&app, &profile_id, &job_id);
+    sync_events::emit_sync_started(&app, &profile_id, &job_id);
 
     // Step 6: Execute sync
     let result = execute_sync(
@@ -128,7 +129,7 @@ pub async fn run_sync_now(
             );
 
             // Emit completed event
-            crate::events::sync_events::emit_sync_completed(
+            sync_events::emit_sync_completed(
                 &app, &profile_id, &job_id, items_added, items_updated, items_deleted, None, None,
             );
 
@@ -154,7 +155,7 @@ pub async fn run_sync_now(
                 let _ = state.jobs_repo.update(&skipped_job);
 
                 // Emit skipped event
-                crate::events::sync_events::emit_sync_skipped(&app, &profile_id, &job_id, &reason);
+                sync_events::emit_sync_skipped(&app, &profile_id, &job_id, &reason);
 
                 Ok(SyncResponse {
                     job_id,
@@ -172,7 +173,7 @@ pub async fn run_sync_now(
                 let _ = state.jobs_repo.update(&failed_job);
 
                 // Emit failed event
-                crate::events::sync_events::emit_sync_failed(&app, &profile_id, &job_id, &app_error.code, &app_error.message);
+                sync_events::emit_sync_failed(&app, &profile_id, &job_id, &app_error.code, &app_error.message);
 
                 Ok(SyncResponse {
                     job_id,
@@ -212,7 +213,7 @@ fn execute_sync(
     path_guard.validate_path(&dest_path, "kiểm tra đích")?;
 
     // Emit progress
-    crate::events::sync_events::emit_sync_progress(
+    sync_events::emit_sync_progress(
         app, profile_id, job_id, 0, None, Some("Đang quét thư mục...".to_string()),
     );
 
@@ -221,7 +222,7 @@ fn execute_sync(
         .map_err(|e| AppError::validation_error(&format!("Lỗi quét thư mục: {}", e)))?;
 
     // Emit progress
-    crate::events::sync_events::emit_sync_progress(
+    sync_events::emit_sync_progress(
         app, profile_id, job_id, 0, None, Some("Đang so sánh file...".to_string()),
     );
 
@@ -260,7 +261,7 @@ fn execute_sync(
     }
 
     // Emit progress
-    crate::events::sync_events::emit_sync_progress(
+    sync_events::emit_sync_progress(
         app, profile_id, job_id, 0, Some(plan.total_operations() as i32), Some("Đang đồng bộ...".to_string()),
     );
 
