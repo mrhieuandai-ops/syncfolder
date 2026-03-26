@@ -102,8 +102,8 @@ pub async fn get_job_logs(
         };
 
         // Apply user-friendly message mapping
-        let message = if let Some(ref err_code) = event.error_code {
-            map_error_to_user_message(err_code)
+        let message = if let Some(ref result) = event.result {
+            map_error_to_user_message(result)
         } else {
             event.message.clone().unwrap_or_else(|| get_default_message(&event.event_type))
         };
@@ -114,7 +114,7 @@ pub async fn get_job_logs(
             level: level.to_string(),
             message,
             details: event.details.clone(),
-            error_code: event.error_code.clone(),
+            error_code: event.result.clone(),
         }
     }).collect();
 
@@ -153,14 +153,20 @@ pub async fn list_jobs(
 
     // Convert to response
     let jobs: Vec<JobSummaryResponse> = filtered_jobs.into_iter().map(|job| {
+        let processed = job.items_added + job.items_updated + job.items_deleted;
+        let items_failed = if job.items_processed > processed {
+            job.items_processed - processed
+        } else {
+            0
+        };
         JobSummaryResponse {
             job_id: job.id,
             profile_id: job.profile_id,
             status: job.status.to_string(),
             started_at: job.started_at.unwrap_or_default(),
             completed_at: job.completed_at,
-            items_processed: job.items_processed,
-            items_failed: job.items_failed,
+            items_processed: Some(job.items_processed),
+            items_failed: Some(items_failed),
             error_code: job.error_code,
             error_message: job.error_message,
         }
@@ -178,16 +184,24 @@ pub async fn get_last_job_status(
     let job = state.jobs_repo.get_last_for_profile(&profile_id)
         .map_err(|e| AppError::validation_error(&format!("Lỗi truy vấn: {}", e)))?;
 
-    Ok(job.map(|j| JobSummaryResponse {
-        job_id: j.id,
-        profile_id: j.profile_id,
-        status: j.status.to_string(),
-        started_at: j.started_at.unwrap_or_default(),
-        completed_at: j.completed_at,
-        items_processed: j.items_processed,
-        items_failed: j.items_failed,
-        error_code: j.error_code,
-        error_message: j.error_message,
+    Ok(job.map(|j| {
+        let processed = j.items_added + j.items_updated + j.items_deleted;
+        let items_failed = if j.items_processed > processed {
+            j.items_processed - processed
+        } else {
+            0
+        };
+        JobSummaryResponse {
+            job_id: j.id,
+            profile_id: j.profile_id,
+            status: j.status.to_string(),
+            started_at: j.started_at.unwrap_or_default(),
+            completed_at: j.completed_at,
+            items_processed: Some(j.items_processed),
+            items_failed: Some(items_failed),
+            error_code: j.error_code,
+            error_message: j.error_message,
+        }
     }))
 }
 
