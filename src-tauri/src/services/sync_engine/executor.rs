@@ -31,7 +31,7 @@ impl Executor {
                 OperationType::Delete => {
                     Self::delete_file(operation, source_root, dest_root)
                 }
-                OperationType::Skip => Ok(()),
+                OperationType::Skip => Ok(0),
             };
 
             match result {
@@ -84,13 +84,6 @@ impl Executor {
 
         // Copy with metadata preservation
         fs::copy(&src_path, temp_file.path()).map_err(|e| e.to_string())?;
-
-        // Preserve original file permissions if possible
-        if let Ok(metadata) = fs::metadata(&src_path) {
-            if let Ok(permissions) = metadata.permissions().mode().checked_add(0o200) {
-                let _ = fs::set_permissions(temp_file.path(), std::fs::Permissions::from_mode(permissions));
-            }
-        }
 
         // Atomically rename temp file to destination
         match temp_file.persist(&dst_path) {
@@ -155,7 +148,7 @@ impl Executor {
                 OperationType::Delete => {
                     Self::delete_file(operation, source_root, dest_root)
                 }
-                OperationType::Skip => Ok(()),
+                OperationType::Skip => Ok(0),
             };
 
             match result {
@@ -201,7 +194,7 @@ impl Executor {
         match operation.operation_type {
             OperationType::Create | OperationType::Update => {
                 // Rollback copy: delete the file that was copied
-                let (src_path, dst_path) = match operation.direction {
+                let (_src_path, dst_path) = match operation.direction {
                     super::comparer::SyncDirection::SourceToDest => (
                         source_root.join(&operation.relative_path),
                         dest_root.join(&operation.relative_path),

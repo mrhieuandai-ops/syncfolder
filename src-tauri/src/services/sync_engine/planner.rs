@@ -136,10 +136,11 @@ impl Planner {
     /// Sort operations to ensure parents are processed before children
     /// This is necessary because creating a directory requires its parent to exist
     pub fn sort_operations(operations: &mut Vec<SyncOperation>) {
+        let sep = std::path::MAIN_SEPARATOR.to_string();
         operations.sort_by(|a, b| {
             // Count path depth (number of separators)
-            let depth_a = a.relative_path.matches(std::path::MAIN_SEPARATOR.as_str()).count();
-            let depth_b = b.relative_path.matches(std::path::MAIN_SEPARATOR.as_str()).count();
+            let depth_a = a.relative_path.matches(sep.as_str()).count();
+            let depth_b = b.relative_path.matches(sep.as_str()).count();
             
             // Parents first (shallower paths)
             depth_a.cmp(&depth_b)

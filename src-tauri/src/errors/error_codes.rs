@@ -75,14 +75,14 @@ impl ErrorCode {
 
     // Access errors
     pub const EACCES: ErrorCode = ErrorCode {
-        code: "EACCES".to_string(),
+        code: String::from("EACCES"),
         error_type: ErrorType::Access,
         retryable: false,
         technical_code: "EACCES",
     };
     
     pub const EPERM: ErrorCode = ErrorCode {
-        code: "EPERM".to_string(),
+        code: String::from("EPERM"),
         error_type: ErrorType::Access,
         retryable: false,
         technical_code: "EPERM",
@@ -90,21 +90,21 @@ impl ErrorCode {
 
     // Availability errors
     pub const ENOENT: ErrorCode = ErrorCode {
-        code: "ENOENT".to_string(),
+        code: String::from("ENOENT"),
         error_type: ErrorType::Availability,
         retryable: true,
         technical_code: "ENOENT",
     };
     
     pub const ENOTDIR: ErrorCode = ErrorCode {
-        code: "ENOTDIR".to_string(),
+        code: String::from("ENOTDIR"),
         error_type: ErrorType::Availability,
         retryable: true,
         technical_code: "ENOTDIR",
     };
     
     pub const EIO: ErrorCode = ErrorCode {
-        code: "EIO".to_string(),
+        code: String::from("EIO"),
         error_type: ErrorType::Availability,
         retryable: true,
         technical_code: "EIO",
@@ -112,14 +112,14 @@ impl ErrorCode {
 
     // Lock errors
     pub const EBUSY: ErrorCode = ErrorCode {
-        code: "EBUSY".to_string(),
+        code: String::from("EBUSY"),
         error_type: ErrorType::Lock,
         retryable: true,
         technical_code: "EBUSY",
     };
     
     pub const ETXTBSY: ErrorCode = ErrorCode {
-        code: "ETXTBSY".to_string(),
+        code: String::from("ETXTBSY"),
         error_type: ErrorType::Lock,
         retryable: true,
         technical_code: "ETXTBSY",
@@ -127,14 +127,14 @@ impl ErrorCode {
 
     // Validation errors
     pub const EINVAL: ErrorCode = ErrorCode {
-        code: "EINVAL".to_string(),
+        code: String::from("EINVAL"),
         error_type: ErrorType::Validation,
         retryable: false,
         technical_code: "EINVAL",
     };
     
     pub const ENAMETOOLONG: ErrorCode = ErrorCode {
-        code: "ENAMETOOLONG".to_string(),
+        code: String::from("ENAMETOOLONG"),
         error_type: ErrorType::Validation,
         retryable: false,
         technical_code: "ENAMETOOLONG",
@@ -142,7 +142,7 @@ impl ErrorCode {
 
     // Unknown errors
     pub const UNKNOWN: ErrorCode = ErrorCode {
-        code: "UNKNOWN".to_string(),
+        code: String::from("UNKNOWN"),
         error_type: ErrorType::Unknown,
         retryable: false,
         technical_code: "UNKNOWN",

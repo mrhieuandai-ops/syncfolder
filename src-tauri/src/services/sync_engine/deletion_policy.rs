@@ -148,13 +148,3 @@ impl Clone for DeletionPolicyEvaluator {
         Self::new(self.policy.clone())
     }
 }
-
-impl Clone for DeletionPolicy {
-    fn clone(&self) -> Self {
-        match self {
-            DeletionPolicy::TwoWaySync => DeletionPolicy::TwoWaySync,
-            DeletionPolicy::Archive => DeletionPolicy::Archive,
-            DeletionPolicy::NeverDelete => DeletionPolicy::NeverDelete,
-        }
-    }
-}
