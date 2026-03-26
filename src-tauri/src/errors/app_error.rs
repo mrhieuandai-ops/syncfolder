@@ -26,7 +26,7 @@ impl AppError {
     /// Create a new AppError from an ErrorCode
     pub fn from_error_code(code: ErrorCode, message: String) -> Self {
         Self {
-            code: code.code,
+            code: code.code.to_string(),
             message,
             details: None,
             retryable: code.retryable,
@@ -37,7 +37,7 @@ impl AppError {
     /// Create a new AppError with custom message
     pub fn new(code: ErrorCode, message: &str) -> Self {
         Self {
-            code: code.code.clone(),
+            code: code.code.to_string(),
             message: message.to_string(),
             details: None,
             retryable: code.retryable,
@@ -100,7 +100,7 @@ impl AppError {
     pub fn from_io_error(path: &str, operation: &str, io_error: std::io::Error) -> Self {
         let error_code = super::error_codes::classify_os_error(Some(io_error.raw_os_error().unwrap_or(0)));
         Self {
-            code: error_code.code,
+            code: error_code.code.to_string(),
             message: format!(
                 "{}: {} - {} ({})",
                 error_code.error_type.vietnamese_message(),

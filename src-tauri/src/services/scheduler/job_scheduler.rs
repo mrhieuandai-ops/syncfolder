@@ -56,7 +56,7 @@ impl JobScheduler {
         }
 
         // Verify profile exists
-        let profile = match self.profiles_repo.get_by_id(profile_id)? {
+        let _profile = match self.profiles_repo.get_by_id(profile_id)? {
             Some(p) => p,
             None => return Err(format!("Profile not found: {}", profile_id)),
         };

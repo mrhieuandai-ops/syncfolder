@@ -25,8 +25,7 @@ pub enum ErrorType {
 }
 
 impl ErrorType {
-    /// Check if error type is retryable
-    pub fn is_retryable(&self) -> bool {
+    pub const fn is_retryable(&self) -> bool {
         match self {
             ErrorType::Availability => true,
             ErrorType::Lock => true,
