@@ -1,38 +1,13 @@
 {
   "$schema": "https://schema.tauri.app/config/2/capabilities",
   "identifier": "default",
-  "description": "Default capabilities for SyncFolder - NFR7: Local config data readable only by creating Windows account. NFR8: No file operations outside configured paths enforced via PathGuard in Rust backend.",
-  "comments": {
-    "note": "NFR8 enforcement: Tauri v2 does not support dynamic path capabilities at runtime. Broad fs scope ($HOME/**) is intentional at Tauri level. The REAL NFR8 enforcement is PathGuard in Rust backend (src-tauri/src/services/path_guard/). All file operations MUST pass through PathGuard.validate_path() before execution."
-  },
+  "description": "Default capabilities for SyncFolder",
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "shell:allow-open",
-    "core:event:default",
-    "core:window:default",
     "dialog:default",
-    "dialog:allow-open",
-    "dialog:allow-save",
-    "dialog:allow-message",
-    "dialog:allow-ask",
-    "dialog:allow-confirm",
     "fs:default",
-    {
-      "identifier": "fs:allow-read",
-      "allow": [
-        { "path": "$HOME/**" },
-        { "path": "$APPDATA/**" },
-        { "path": "$LOCALAPPDATA/**" }
-      ]
-    },
-    {
-      "identifier": "fs:allow-write", 
-      "allow": [
-        { "path": "$HOME/**" },
-        { "path": "$APPDATA/**" },
-        { "path": "$LOCALAPPDATA/**" }
-      ]
-    }
+    "fs:allow-read",
+    "fs:allow-write"
   ]
 }
