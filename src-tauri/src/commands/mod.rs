@@ -1,8 +1,7 @@
 pub mod profiles;
+pub mod sync;
+pub mod status;
+pub mod logs;
 
-// NOTE: sync, status, logs, settings modules will be implemented in subsequent epics
-// These are stubbed out for future implementation:
-// pub mod sync;
-// pub mod status;
-// pub mod logs;
+// NOTE: settings module will be implemented in subsequent epics
 // pub mod settings;

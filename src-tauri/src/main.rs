@@ -13,10 +13,11 @@ mod errors;
 mod repositories;
 mod services;
 
+mod state;
+
 use services::persistence::Database;
 use repositories::{ProfilesRepository, JobsRepository};
 use commands::profiles::{create_profile, get_profile, list_profiles, update_profile, delete_profile};
-use commands::sync::run_sync_now;
 use services::scheduler::job_scheduler::{JobScheduler, start_scheduler_task};
 use state::AppState;
 
