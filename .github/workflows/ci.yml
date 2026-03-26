@@ -1,0 +1,107 @@
+# Continuous Integration Workflow for SyncFolder
+# Runs on every push and pull request
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # Frontend linting and type checking
+  frontend:
+    name: Frontend Build & Test
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type check
+        run: npm run typecheck
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Frontend build
+        run: npm run build
+        env:
+          VITE_APP_VERSION: ${{ github.sha }}
+
+  # Rust/Tauri backend checks
+  backend:
+    name: Rust Backend
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.94.0
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Check Rust formatting
+        run: |
+          cd src-tauri
+          cargo fmt --check
+
+      - name: Clippy linting
+        run: |
+          cd src-tauri
+          cargo clippy -- -D warnings
+
+      - name: Build Tauri app
+        run: |
+          cd src-tauri
+          cargo build --verbose
+        env:
+          RUST_BACKTRACE: full
+
+  # Combined test job
+  test:
+    name: Tests
+    runs-on: windows-latest
+    needs: [frontend, backend]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test -- --run
+
+      - name: Rust tests
+        run: |
+          cd src-tauri
+          cargo test --verbose

@@ -1,0 +1,73 @@
+# generated: 2026-03-25
+# project: syncfolder
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: /mnt/d/ai_project/syncfolder/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-03-26
+project: syncfolder
+project_key: NOKEY
+tracking_system: file-system
+story_location: /mnt/d/ai_project/syncfolder/_bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: done
+  1-1-khoi-tao-ung-dung-tu-starter-template-va-nen-tang-luu-tru-cuc-bo: done
+  1-2-tao-ho-so-dong-bo-moi-bang-chon-thu-muc-nguon-va-dich: done
+  1-3-luu-va-khoi-phuc-ho-so-dong-bo-da-cau-hinh: done
+  1-4-chinh-sua-ho-so-va-cau-hinh-lich-dong-bo: done
+  epic-1-retrospective: optional
+  epic-2: done
+  2-1-khoi-chay-dong-bo-thu-cong-cho-mot-ho-so-da-luu: done
+  2-2-thuc-thi-dong-bo-theo-lich-voi-co-che-chong-chay-chong: done
+  2-3-dong-bo-file-va-thu-muc-con-moi-giua-hai-phia: done
+  2-4-dong-bo-thay-doi-noi-dung-file-hai-chieu: done
+  2-5-ap-dung-chinh-sach-xoa-file-nhat-quan-va-an-toan: done
+  epic-2-retrospective: optional
+  epic-3: done
+  3-1-hien-thi-dashboard-trang-thai-ho-so-va-lan-chay-gan-nhat: done
+  3-2-dong-bo-su-kien-runtime-tu-native-core-len-giao-dien: done
+  3-3-ghi-log-co-cau-truc-cho-moi-sync-job: done
+  3-4-hien-thi-lich-su-va-chi-tiet-log-de-doc-de-chan-doan: done
+  epic-3-retrospective: optional
+  epic-4: done
+  4-1-phat-hien-som-thu-muc-khong-kha-dung-truoc-khi-thuc-thi-job: done
+  4-2-phan-loai-loi-truy-cap-khoa-file-va-cau-hinh-khong-hop-le: done
+  4-3-cho-phep-phuc-hoi-va-chay-lai-sau-khi-khac-phuc-loi-moi-truong: done
+  4-4-bao-ve-boundary-truy-cap-file-theo-path-allowlist: done
+  epic-4-retrospective: optional
+  epic-5: done
+  5-1-xay-application-shell-windows-11-voi-dieu-huong-ro-rang: done
+  5-2-hoan-thien-luong-onboarding-va-cac-trang-thai-giao-dien-cot-loi: done
+  5-3-dam-bao-accessibility-va-keyboard-first-cho-cac-thao-tac-chinh: done
+  5-4-tich-hop-build-packaging-va-smoke-readiness-cho-phat-hanh-windows: done
+  epic-5-retrospective: optional

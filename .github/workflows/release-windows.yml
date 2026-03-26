@@ -1,0 +1,124 @@
+# Windows Release Build and Packaging Pipeline
+# Builds the Tauri application for Windows distribution
+
+name: Release Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        type: string
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  VERSION: ${{ github.event.inputs.version || github.ref_name }}
+
+jobs:
+  # Create release notes and GitHub release
+  release-notes:
+    name: Generate Release Notes
+    runs-on: ubuntu-latest
+    outputs:
+      body: ${{ steps.generate.outputs.body }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate release notes
+        id: generate
+        run: |
+          BODY="## SyncFolder v${VERSION}\n\n"
+          BODY+="### Installation\n"
+          BODY+="Download the installer for your system and run it.\n\n"
+          BODY+="### Changes\n"
+          BODY+="See the CHANGELOG for detailed changes.\n"
+          echo "body=$BODY" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        id: create_release
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: SyncFolder v${{ env.VERSION }}
+          body: ${{ steps.generate.outputs.body }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Build Windows release
+  build-windows:
+    name: Build Windows Installer
+    runs-on: windows-latest
+    needs: release-notes
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.94.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          VITE_APP_VERSION: ${{ env.VERSION }}
+
+      - name: Build Tauri application
+        id: tauri-build
+        run: |
+          cd src-tauri
+          cargo tauri build --verbose --bundles msi,nsis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      - name: Upload MSI installer
+        uses: actions/upload-release-asset@v2
+        with:
+          upload_url: ${{ needs.release-notes.outputs.upload_url }}
+          asset_path: src-tauri/target/release/bundle/msi/*.msi
+          asset_name: SyncFolder-${{ env.VERSION }}-windows.msi
+          asset_content_type: application/x-msi
+
+      - name: Upload NSIS installer
+        uses: actions/upload-release-asset@v2
+        with:
+          upload_url: ${{ needs.release-notes.outputs.upload_url }}
+          asset_path: src-tauri/target/release/bundle/nsis/*.exe
+          asset_name: SyncFolder-${{ env.VERSION }}-windows-setup.exe
+          asset_content_type: application/x-executable
+
+      - name: Upload portable executable
+        uses: actions/upload-release-asset@v2
+        with:
+          upload_url: ${{ needs.release-notes.outputs.upload_url }}
+          asset_path: src-tauri/target/release/syncfolder.exe
+          asset_name: SyncFolder-${{ env.VERSION }}-windows-portable.exe
+          asset_content_type: application/x-executable
