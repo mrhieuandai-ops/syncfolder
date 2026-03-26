@@ -81,10 +81,12 @@ pub async fn run_sync_now(
     // Step 4: Check if job already running for this profile (anti-overlap - Story 2-2)
     // Use jobs_repo.get_running_for_profile() consistent with scheduler
     if let Ok(Some(running_job)) = state.jobs_repo.get_running_for_profile(&profile_id) {
+        let job_id = running_job.id.clone();
+        let message = format!("Job đang chạy cho profile này: {}", running_job.id);
         return Ok(SyncResponse {
-            job_id: running_job.id,
+            job_id,
             status: "running".to_string(),
-            message: format!("Job đang chạy cho profile này: {}", running_job.id),
+            message,
             retryable: false,
             items_added: 0,
             items_updated: 0,
