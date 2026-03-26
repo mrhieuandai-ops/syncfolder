@@ -2,7 +2,7 @@
 //! 
 //! Commands:
 //! - get_sync_status: Get overall sync status for a profile
-//! - list_jobs: List recent sync jobs
+//! - list_recent_jobs: List recent sync jobs
 
 use crate::errors::AppError;
 use crate::models::{SyncJob, JobStatus};
@@ -71,7 +71,7 @@ pub async fn get_sync_status(
 
 /// List recent sync jobs
 #[tauri::command]
-pub async fn list_jobs(
+pub async fn list_recent_jobs(
     profile_id: Option<String>,
     limit: Option<i32>,
 ) -> Result<Vec<JobListItem>, AppError> {

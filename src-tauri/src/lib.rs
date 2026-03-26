@@ -13,6 +13,7 @@ pub mod repositories;
 pub mod services;
 pub mod commands;
 pub mod state;
+pub mod events;
 
 // Re-export commonly used types
 pub use models::{SyncProfile, SyncJob, JobStatus, JobSource, SyncEvent, SyncEventType};
