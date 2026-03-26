@@ -1,5 +1,5 @@
 use super::scanner::ScanResult;
-use super::comparer::{ChangedFile, CompareResult, SyncDirection};
+use super::comparer::{CompareResult, SyncDirection};
 use serde::{Deserialize, Serialize};
 
 /// Planned sync operation
@@ -67,7 +67,7 @@ impl Planner {
     pub fn plan(
         scan_result: &ScanResult,
         compare_result: &CompareResult,
-        source_only_newer: bool,
+        _source_only_newer: bool,
     ) -> SyncPlan {
         let mut operations = Vec::new();
 

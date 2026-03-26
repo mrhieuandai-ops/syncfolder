@@ -1,5 +1,4 @@
 use super::scanner::ScanResult;
-use super::comparer::SyncDirection;
 use serde::{Deserialize, Serialize};
 
 /// Deletion policy rules

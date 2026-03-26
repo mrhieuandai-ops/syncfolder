@@ -2,7 +2,6 @@
 //! Logs are stored in SQLite sync_events table and can be retrieved by job_id
 
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 
 /// Structured log entry for a sync job
 #[derive(Debug, Clone, Serialize, Deserialize)]

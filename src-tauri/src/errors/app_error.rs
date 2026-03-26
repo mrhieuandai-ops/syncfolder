@@ -2,7 +2,7 @@
 //! Format: {code, message, details?, retryable}
 
 use serde::{Deserialize, Serialize};
-use super::error_codes::{ErrorCode, ErrorType};
+use super::error_codes::ErrorCode;
 
 /// Standardized error response format for all Tauri commands
 #[derive(Debug, Clone, Serialize, Deserialize)]

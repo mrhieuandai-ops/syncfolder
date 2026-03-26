@@ -12,22 +12,10 @@ pub mod errors;
 pub mod repositories;
 pub mod services;
 pub mod commands;
+pub mod state;
 
 // Re-export commonly used types
 pub use models::{SyncProfile, SyncJob, JobStatus, JobSource, SyncEvent, SyncEventType};
 pub use errors::{AppError, AppResult, ErrorCode, ErrorType, SyncError};
 pub use repositories::{ProfilesRepository, JobsRepository, EventsRepository};
-
-use rusqlite::Connection;
-use std::sync::Arc;
-
-/// Application state shared across commands
-pub struct AppState {
-    pub db: Arc<Connection>,
-}
-
-impl AppState {
-    pub fn new(db: Connection) -> Self {
-        Self { db: Arc::new(db) }
-    }
-}
+pub use state::AppState;

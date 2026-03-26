@@ -44,7 +44,7 @@ impl PathGuard {
     }
 
     /// Validate path is allowed, return error if not
-    pub fn validate_path(&self, path: &Path, operation: &str) -> AppResult<()> {
+    pub fn validate_path(&self, path: &Path, _operation: &str) -> AppResult<()> {
         let path = Self::normalize_path(path);
         
         // SECURITY: Check for path traversal attacks (../)

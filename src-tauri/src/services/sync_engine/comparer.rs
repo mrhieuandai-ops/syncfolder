@@ -1,4 +1,4 @@
-use super::scanner::{DirectoryManifest, FileMetadata, ScanResult};
+use super::scanner::{FileMetadata, ScanResult};
 use serde::{Deserialize, Serialize};
 
 /// File change detection result

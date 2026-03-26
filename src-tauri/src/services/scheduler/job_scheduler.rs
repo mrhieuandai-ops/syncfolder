@@ -1,4 +1,4 @@
-use crate::models::{SyncProfile, JobSource, SyncJob};
+use crate::models::{JobSource, SyncJob};
 use crate::repositories::{JobsRepository, ProfilesRepository};
 use std::sync::Arc;
 use std::time::Duration;

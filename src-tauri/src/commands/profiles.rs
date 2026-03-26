@@ -9,7 +9,7 @@
 
 use crate::AppState;
 use crate::errors::{AppError, AppResult};
-use crate::models::{SyncProfile, SyncJob, JobSource};
+use crate::models::SyncProfile;
 use crate::repositories::ProfilesRepository;
 use crate::services::scheduler::job_scheduler::SCHEDULE_INTERVALS;
 use serde::{Deserialize, Serialize};

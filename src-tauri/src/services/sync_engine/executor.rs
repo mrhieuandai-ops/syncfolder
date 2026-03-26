@@ -1,6 +1,5 @@
 use super::planner::{SyncPlan, SyncOperation, OperationType};
-use super::scanner::ScanResult;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::fs;
 use tempfile::NamedTempFile;
 
@@ -81,16 +80,16 @@ impl Executor {
         // Use temp file for safe update (rollback on failure)
         let temp_file = NamedTempFile::new_in(dst_path.parent().unwrap())
             .map_err(|e| e.to_string())?;
+        let temp_path = temp_file.path().to_path_buf();
 
         // Copy with metadata preservation
-        fs::copy(&src_path, temp_file.path()).map_err(|e| e.to_string())?;
+        fs::copy(&src_path, &temp_path).map_err(|e| e.to_string())?;
 
         // Atomically rename temp file to destination
         match temp_file.persist(&dst_path) {
             Ok(_) => {}
             Err(e) => {
-                // Cleanup orphaned temp file on failure
-                let _ = fs::remove_file(temp_file.path());
+                let _ = fs::remove_file(&temp_path);
                 return Err(e.to_string());
             }
         }
