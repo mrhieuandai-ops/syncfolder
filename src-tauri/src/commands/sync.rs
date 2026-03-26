@@ -127,7 +127,7 @@ pub async fn run_sync_now(
 
             // Emit completed event
             crate::events::sync_events::emit_sync_completed(
-                &app, &profile_id, &job_id, items_added, items_updated, items_deleted,
+                &app, &profile_id, &job_id, items_added, items_updated, items_deleted, None, None,
             );
 
             Ok(SyncResponse {
